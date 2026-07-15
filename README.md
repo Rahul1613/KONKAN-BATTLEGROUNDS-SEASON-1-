@@ -8,7 +8,6 @@ A premium esports tournament website for BGMI (Battlegrounds Mobile India) regio
 - **Styling:** Tailwind CSS
 - **Animations:** Framer Motion
 - **Icons:** Lucide React
-- **Backend/Database:** Supabase (Postgres + Auth + Realtime)
 - **Routing:** React Router DOM
 - **Fonts:** Bebas Neue (headings), Inter (body text)
 
@@ -45,17 +44,7 @@ A premium esports tournament website for BGMI (Battlegrounds Mobile India) regio
    npm install
    ```
 
-3. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` and add your Supabase credentials:
-   ```
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. Start the development server:
+3. Start the development server:
    ```bash
    npm run dev
    ```
@@ -64,49 +53,6 @@ A premium esports tournament website for BGMI (Battlegrounds Mobile India) regio
    ```bash
    npm run build
    ```
-
-## Supabase Schema
-
-```sql
--- Teams table
-CREATE TABLE teams (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  team_id TEXT UNIQUE NOT NULL,
-  team_name TEXT NOT NULL,
-  captain TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Matches table
-CREATE TABLE matches (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  match_no INTEGER NOT NULL,
-  map TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('upcoming', 'live', 'completed')),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Results table
-CREATE TABLE results (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  match_id UUID REFERENCES matches(id) ON DELETE CASCADE,
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  placement INTEGER NOT NULL,
-  kills INTEGER NOT NULL DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Players table (optional, for MVP page)
-CREATE TABLE players (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  player_name TEXT NOT NULL,
-  team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
-  kills INTEGER NOT NULL DEFAULT 0
-);
-
--- Enable Realtime
-ALTER PUBLICATION supabase_realtime ADD TABLE results;
-```
 
 ## Point System
 
@@ -127,7 +73,7 @@ Example placement points:
 
 ## Features
 
-- **Real-time Updates:** Leaderboard updates live via Supabase Realtime
+- **Live-style Updates:** Leaderboard data can be refreshed dynamically in the UI
 - **Responsive Design:** Fully responsive across desktop, tablet, and mobile
 - **Glassmorphism UI:** Modern glass-effect cards with backdrop blur
 - **Animations:** Smooth page transitions and micro-interactions

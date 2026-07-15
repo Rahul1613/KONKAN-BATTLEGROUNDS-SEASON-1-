@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
-import { Trophy, Users, Gamepad2, Search, ArrowUp, ArrowDown, Crown, Zap, Flame } from 'lucide-react'
+import { Trophy, Users, Gamepad2, Search, ArrowUp, ArrowDown, Crown, Zap } from 'lucide-react'
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
