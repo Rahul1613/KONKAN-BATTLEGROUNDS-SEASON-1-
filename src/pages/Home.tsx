@@ -132,20 +132,36 @@ export default function Home() {
               <AnimatedStatCard icon={Gamepad2} label="Current Match" value="Match 5" />
             </motion.div>
             
-            <motion.button 
-              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-inter font-semibold rounded-lg transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/50"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                const section = document.getElementById('leaderboard')
-                section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }}
-            >
-              View Full Leaderboard
-            </motion.button>
+            <div className="flex flex-wrap justify-center gap-4">
+              <motion.a 
+                href="https://forms.gle/c5KmNwmEw5kPmtAg6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-inter font-semibold rounded-lg transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/50 flex items-center gap-2 pulse-glow shimmer cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Zap className="w-5 h-5 animate-pulse text-success" />
+                Register Now
+              </motion.a>
+              <motion.button 
+                className="px-8 py-3 bg-surface border border-primary/20 hover:border-primary/50 text-white font-inter font-semibold rounded-lg transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const section = document.getElementById('leaderboard')
+                  section?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+              >
+                View Leaderboard
+              </motion.button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -189,6 +205,61 @@ export default function Home() {
               <PodiumCard rank={3} team="Team Charlie" points={38} kills={22} wwcd={1} />
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Registration Section */}
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <motion.div 
+            className="glass-card rounded-2xl p-8 md:p-12 border-2 border-primary/30 relative overflow-hidden text-center gradient-border"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-success/5 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col items-center gap-6">
+              <div className="rounded-full bg-primary/20 p-4 border border-primary/40 animate-bounce">
+                <Gamepad2 className="w-10 h-10 text-primary" />
+              </div>
+              
+              <h2 className="font-bebas text-4xl md:text-5xl tracking-wide text-glow">
+                REGISTER FOR <span className="text-primary">SEASON 1</span>
+              </h2>
+              
+              <p className="font-inter text-base md:text-lg text-white/70 max-w-2xl leading-relaxed">
+                Do you have what it takes to dominate the battlefield? Gather your squad, register for Konkan Battlegrounds Season 1, and compete for the ultimate glory and a prize pool of <span className="text-success font-semibold">₹50,000</span>!
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-6 mt-4 text-left">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-ping" />
+                  <span className="font-inter text-sm text-white/60">Limited Slots (32 Teams Only)</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-success animate-ping" />
+                  <span className="font-inter text-sm text-white/60">Free Entry</span>
+                </div>
+              </div>
+              
+              <motion.a 
+                href="https://forms.gle/c5KmNwmEw5kPmtAg6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 px-10 py-4 bg-primary hover:bg-primary/90 text-white font-inter font-semibold rounded-lg transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/50 flex items-center gap-3 text-lg pulse-glow shimmer cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Trophy className="w-5 h-5 text-gold" />
+                Secure Your Slot Now
+              </motion.a>
+            </div>
+          </motion.div>
         </div>
       </section>
 

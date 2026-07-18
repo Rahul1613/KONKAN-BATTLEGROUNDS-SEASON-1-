@@ -49,9 +49,17 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+            <a
+              href="https://forms.gle/c5KmNwmEw5kPmtAg6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-inter text-sm font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/30 pulse-glow"
+            >
+              Register Now
+            </a>
             <Link
               to="/admin"
-              className="p-2 rounded-lg bg-surface border border-primary/20 hover:border-primary/50 transition-colors"
+              className="p-2 rounded-lg bg-surface border border-primary/20 hover:border-primary/50 transition-colors flex items-center justify-center"
             >
               <Shield className="w-5 h-5 text-primary" />
             </Link>
@@ -81,6 +89,15 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+            <a
+              href="https://forms.gle/c5KmNwmEw5kPmtAg6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white font-inter text-sm font-semibold transition-all shadow-md shadow-primary/20"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Register Now
+            </a>
             <Link
               to="/admin"
               className="flex items-center space-x-2 text-sm font-medium text-primary"

@@ -18,8 +18,18 @@ export default function Footer() {
             Konkan Battlegrounds — Made with ❤️ in Konkan
           </p>
 
-          <div className="flex items-center space-x-4">
-            <span className="font-inter text-xs text-white/40 uppercase tracking-wider">Season 1</span>
+          <div className="flex items-center space-x-6">
+            <div className="flex flex-col items-end">
+              <span className="font-inter text-xs text-white/40 uppercase tracking-wider">Season 1</span>
+              <a 
+                href="https://forms.gle/c5KmNwmEw5kPmtAg6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-inter text-xs text-primary hover:text-primary/80 transition-colors font-semibold mt-0.5"
+              >
+                Register Now
+              </a>
+            </div>
             <div className="flex items-center space-x-3">
               <a href="#" className="p-2 rounded-lg bg-surface border border-primary/20 hover:border-primary/50 transition-colors">
                 <Instagram className="w-4 h-4 text-white/70 hover:text-primary" />
