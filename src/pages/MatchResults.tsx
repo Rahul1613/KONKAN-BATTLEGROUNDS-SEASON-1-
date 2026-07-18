@@ -1,30 +1,18 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronDown, Trophy, MapPin, Clock, Zap } from 'lucide-react'
+import { ChevronDown, Trophy, MapPin, Clock, Zap, Gamepad2 } from 'lucide-react'
+import { matchesData, matchResultsData } from '../lib/data'
 
 export default function MatchResults() {
   const [filter, setFilter] = useState('all')
   const [expandedMatch, setExpandedMatch] = useState<number | null>(null)
 
-  const matches = [
-    { id: 1, matchNo: 5, map: 'Erangel', date: '2024-01-15', status: 'live' },
-    { id: 2, matchNo: 4, map: 'Miramar', date: '2024-01-15', status: 'completed' },
-    { id: 3, matchNo: 3, map: 'Sanhok', date: '2024-01-14', status: 'completed' },
-    { id: 4, matchNo: 2, map: 'Erangel', date: '2024-01-14', status: 'completed' },
-    { id: 5, matchNo: 1, map: 'Vikendi', date: '2024-01-13', status: 'completed' },
-  ]
+  const matches = matchesData
+  const matchResults = matchResultsData
 
   const filteredMatches = matches.filter(m => 
     filter === 'all' ? true : m.status === filter
   )
-
-  const matchResults = {
-    1: [
-      { team: 'Team Bravo', placement: 1, kills: 12, points: 22 },
-      { team: 'Team Alpha', placement: 2, kills: 8, points: 14 },
-      { team: 'Team Charlie', placement: 3, kills: 10, points: 15 },
-    ]
-  }
 
   return (
     <div className="pt-24 px-4 pb-12 min-h-screen">
@@ -63,23 +51,40 @@ export default function MatchResults() {
         </motion.div>
 
         {/* Match Cards */}
-        <div className="space-y-4">
-          {filteredMatches.map((match, index) => (
-            <motion.div
-              key={match.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
-              <MatchCard
-                match={match}
-                isExpanded={expandedMatch === match.id}
-                onToggle={() => setExpandedMatch(expandedMatch === match.id ? null : match.id)}
-                results={matchResults[match.id as keyof typeof matchResults]}
-              />
-            </motion.div>
-          ))}
-        </div>
+        {filteredMatches.length === 0 ? (
+          <motion.div 
+            className="glass-card rounded-2xl p-12 border border-primary/20 text-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="rounded-full bg-surface border border-primary/20 p-4 w-16 h-16 flex items-center justify-center mx-auto mb-6">
+              <Gamepad2 className="w-8 h-8 text-white/40" />
+            </div>
+            <h2 className="font-bebas text-2xl md:text-3xl mb-3">NO MATCHES</h2>
+            <p className="font-inter text-sm text-white/50 max-w-md mx-auto">
+              No match results are currently available under this category. Standings will appear once matches begin!
+            </p>
+          </motion.div>
+        ) : (
+          <div className="space-y-4">
+            {filteredMatches.map((match, index) => (
+              <motion.div
+                key={match.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <MatchCard
+                  match={match}
+                  isExpanded={expandedMatch === match.id}
+                  onToggle={() => setExpandedMatch(expandedMatch === match.id ? null : match.id)}
+                  results={matchResults[match.id]}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

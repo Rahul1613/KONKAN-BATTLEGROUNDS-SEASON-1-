@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Shield, Trophy, Users, Gamepad2, Clock, Save } from 'lucide-react'
+import { tournamentStats, leaderboardData, matchesData } from '../lib/data'
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -68,10 +69,10 @@ export default function Admin() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard icon={Users} label="Total Teams" value="32" />
-          <StatCard icon={Trophy} label="Matches Played" value="5" />
-          <StatCard icon={Gamepad2} label="Current Match" value="Match 5" />
-          <StatCard icon={Clock} label="Last Update" value="2m ago" />
+          <StatCard icon={Users} label="Total Teams" value={tournamentStats.totalTeams} />
+          <StatCard icon={Trophy} label="Matches Played" value={matchesData.length.toString()} />
+          <StatCard icon={Gamepad2} label="Current Match" value={tournamentStats.currentMatch} />
+          <StatCard icon={Clock} label="Last Update" value="Just now" />
         </div>
 
         {/* Update Match Result Form */}
@@ -98,11 +99,13 @@ export default function Admin() {
             <div>
               <label className="block font-inter text-sm font-medium mb-2">Team</label>
               <select className="w-full px-4 py-3 bg-surface border border-primary/20 rounded-lg font-inter focus:outline-none focus:border-primary/50">
-                <option>Team Bravo</option>
-                <option>Team Alpha</option>
-                <option>Team Charlie</option>
-                <option>Team Delta</option>
-                <option>Team Echo</option>
+                {leaderboardData.length === 0 ? (
+                  <option>No teams registered</option>
+                ) : (
+                  leaderboardData.map(team => (
+                    <option key={team.team}>{team.team}</option>
+                  ))
+                )}
               </select>
             </div>
             <div>

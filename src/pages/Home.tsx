@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useRef, useEffect, useState } from 'react'
 import { Trophy, Users, Gamepad2, Search, ArrowUp, ArrowDown, Crown, Zap } from 'lucide-react'
+import { tournamentStats, leaderboardData } from '../lib/data'
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -84,25 +85,38 @@ export default function Home() {
               }}
             />
             
-            <motion.div 
-              className="inline-flex items-center px-4 py-2 rounded-full bg-primary/20 border border-primary/40 mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <motion.span 
-                className="w-2 h-2 bg-success rounded-full mr-2"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [1, 0.5, 1]
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity
-                }}
-              />
-              <span className="font-inter text-sm font-semibold text-success">SEASON 1 LIVE</span>
-            </motion.div>
+            {tournamentStats.status !== 'upcoming' ? (
+              <motion.div 
+                className="inline-flex items-center px-4 py-2 rounded-full bg-primary/20 border border-primary/40 mb-6"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <motion.span 
+                  className={`w-2 h-2 rounded-full mr-2 ${tournamentStats.status === 'live' ? 'bg-success' : 'bg-white/40'}`}
+                  animate={tournamentStats.status === 'live' ? {
+                    scale: [1, 1.5, 1],
+                    opacity: [1, 0.5, 1]
+                  } : {}}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity
+                  }}
+                />
+                <span className={`font-inter text-sm font-semibold uppercase ${tournamentStats.status === 'live' ? 'text-success' : 'text-white/60'}`}>
+                  SEASON 1 {tournamentStats.status}
+                </span>
+              </motion.div>
+            ) : (
+              <motion.div 
+                className="inline-flex items-center px-4 py-2 rounded-full bg-primary/20 border border-primary/40 mb-6"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <span className="font-inter text-sm font-semibold text-primary">SEASON 1 COMING SOON</span>
+              </motion.div>
+            )}
             
             <motion.h1 
               className="font-bebas text-5xl md:text-7xl lg:text-8xl tracking-wider text-glow mb-4"
@@ -127,9 +141,9 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
             >
-              <AnimatedStatCard icon={Trophy} label="Prize Pool" value="₹50,000" />
-              <AnimatedStatCard icon={Users} label="Teams" value="32" />
-              <AnimatedStatCard icon={Gamepad2} label="Current Match" value="Match 5" />
+              <AnimatedStatCard icon={Trophy} label="Prize Pool" value={tournamentStats.prizePool} />
+              <AnimatedStatCard icon={Users} label="Teams" value={tournamentStats.totalTeams} />
+              <AnimatedStatCard icon={Gamepad2} label="Current Match" value={tournamentStats.currentMatch} />
             </motion.div>
             
             <div className="flex flex-wrap justify-center gap-4">
@@ -167,46 +181,63 @@ export default function Home() {
       </section>
 
       {/* Top 3 Podium */}
-      <section className="py-16 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <motion.h2 
-            className="font-bebas text-4xl text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="text-primary">TOP 3</span> TEAMS
-          </motion.h2>
-          <div className="flex justify-center items-end gap-4 md:gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1, duration: 0.6 }}
-            >
-              <PodiumCard rank={2} team="Team Alpha" points={45} kills={28} wwcd={1} />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-            >
-              <PodiumCard rank={1} team="Team Bravo" points={52} kills={35} wwcd={2} />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <PodiumCard rank={3} team="Team Charlie" points={38} kills={22} wwcd={1} />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {(() => {
+        const top1 = leaderboardData.find(t => t.rank === 1);
+        const top2 = leaderboardData.find(t => t.rank === 2);
+        const top3 = leaderboardData.find(t => t.rank === 3);
+        const hasPodiumData = top1 || top2 || top3;
+        
+        if (!hasPodiumData) return null;
+
+        return (
+          <section className="py-16 px-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent" />
+            <div className="max-w-7xl mx-auto relative z-10">
+              <motion.h2 
+                className="font-bebas text-4xl text-center mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <span className="text-primary">TOP 3</span> TEAMS
+              </motion.h2>
+              <div className="flex justify-center items-end gap-4 md:gap-6 flex-wrap">
+                {top2 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1, duration: 0.6 }}
+                  >
+                    <PodiumCard rank={2} team={top2.team} points={top2.points} kills={top2.kills} wwcd={top2.wwcd} />
+                  </motion.div>
+                )}
+                {top1 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2, duration: 0.6 }}
+                  >
+                    <PodiumCard rank={1} team={top1.team} points={top1.points} kills={top1.kills} wwcd={top1.wwcd} />
+                  </motion.div>
+                )}
+                {top3 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                  >
+                    <PodiumCard rank={3} team={top3.team} points={top3.points} kills={top3.kills} wwcd={top3.wwcd} />
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Registration Section */}
       <section className="py-16 px-4 relative overflow-hidden">
@@ -308,43 +339,45 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { rank: 1, team: 'Team Bravo', matches: 5, wwcd: 2, kills: 35, points: 52, change: 'up' },
-                    { rank: 2, team: 'Team Alpha', matches: 5, wwcd: 1, kills: 28, points: 45, change: 'down' },
-                    { rank: 3, team: 'Team Charlie', matches: 5, wwcd: 1, kills: 22, points: 38, change: 'same' },
-                    { rank: 4, team: 'Team Delta', matches: 5, wwcd: 0, kills: 20, points: 32, change: 'up' },
-                    { rank: 5, team: 'Team Echo', matches: 5, wwcd: 1, kills: 18, points: 30, change: 'down' },
-                  ].map((team, index) => (
-                    <motion.tr
-                      key={team.rank}
-                      className="border-t border-primary/10 hover:bg-white/5 transition-colors cursor-pointer"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      whileHover={{ scale: 1.01, backgroundColor: 'rgba(255,255,255,0.08)' }}
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          {team.rank === 1 && <Crown className="w-5 h-5 text-gold" />}
-                          {team.rank === 2 && <Crown className="w-5 h-5 text-silver" />}
-                          {team.rank === 3 && <Crown className="w-5 h-5 text-bronze" />}
-                          <span className="font-bebas text-lg">{team.rank}</span>
-                        </div>
+                  {leaderboardData.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center text-white/50 font-inter">
+                        No team statistics available yet. Standings will update once the tournament begins!
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className="font-inter font-medium">{team.team}</span>
-                          {team.change === 'up' && <motion.div initial={{ y: 0 }} animate={{ y: [-2, 0, -2] }} transition={{ repeat: Infinity, duration: 1 }}><ArrowUp className="w-4 h-4 text-success" /></motion.div>}
-                          {team.change === 'down' && <motion.div initial={{ y: 0 }} animate={{ y: [2, 0, 2] }} transition={{ repeat: Infinity, duration: 1 }}><ArrowDown className="w-4 h-4 text-primary" /></motion.div>}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 font-inter">{team.matches}</td>
-                      <td className="px-6 py-4 font-inter">{team.wwcd}</td>
-                      <td className="px-6 py-4 font-inter">{team.kills}</td>
-                      <td className="px-6 py-4 font-bebas text-lg text-primary">{team.points}</td>
-                    </motion.tr>
-                  ))}
+                    </tr>
+                  ) : (
+                    leaderboardData.map((team, index) => (
+                      <motion.tr
+                        key={team.rank}
+                        className="border-t border-primary/10 hover:bg-white/5 transition-colors cursor-pointer"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.01, backgroundColor: 'rgba(255,255,255,0.08)' }}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            {team.rank === 1 && <Crown className="w-5 h-5 text-gold" />}
+                            {team.rank === 2 && <Crown className="w-5 h-5 text-silver" />}
+                            {team.rank === 3 && <Crown className="w-5 h-5 text-bronze" />}
+                            <span className="font-bebas text-lg">{team.rank}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <span className="font-inter font-medium">{team.team}</span>
+                            {team.change === 'up' && <motion.div initial={{ y: 0 }} animate={{ y: [-2, 0, -2] }} transition={{ repeat: Infinity, duration: 1 }}><ArrowUp className="w-4 h-4 text-success" /></motion.div>}
+                            {team.change === 'down' && <motion.div initial={{ y: 0 }} animate={{ y: [2, 0, 2] }} transition={{ repeat: Infinity, duration: 1 }}><ArrowDown className="w-4 h-4 text-primary" /></motion.div>}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-inter">{team.matches}</td>
+                        <td className="px-6 py-4 font-inter">{team.wwcd}</td>
+                        <td className="px-6 py-4 font-inter">{team.kills}</td>
+                        <td className="px-6 py-4 font-bebas text-lg text-primary">{team.points}</td>
+                      </motion.tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
